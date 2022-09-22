@@ -2,7 +2,7 @@
  * @Author: Zhouqi
  * @Date: 2022-09-21 16:26:22
  * @LastEditors: Zhouqi
- * @LastEditTime: 2022-09-22 17:13:03
+ * @LastEditTime: 2022-09-22 22:02:24
  */
 import fs from 'fs';
 import path from 'path';
@@ -15,16 +15,33 @@ import {
 } from '@babel/core';
 import ejs from 'ejs';
 
+import webpackConfig from './webpack.config.js';
 
-
-const webpackConfig = {
-    input: './src/main.js',
-    output: './dist/bundle.js'
-};
+const {
+    entry,
+    output,
+    module
+} = webpackConfig;
 
 const resolveInputDep = (filePath) => {
-    const source = fs.readFileSync(filePath, {
+    let source = fs.readFileSync(filePath, {
         encoding: 'utf-8'
+    });
+
+    // 执行loader
+    const {
+        rules
+    } = module;
+
+    // loader需要对源代码进行转化，在生成ast之前执行loader
+    rules.forEach(({
+        test,
+        use
+    }) => {
+        // 匹配上文件则进行loader处理
+        if (test.test(filePath)) {
+            source = use(source);
+        }
     });
 
     // 解析code生成ast
@@ -84,10 +101,13 @@ const resolveBundleDeps = (filePath) => {
 }
 
 // 模块解析后的数据
-const moduleGraph = resolveBundleDeps(webpackConfig.input);
+const moduleGraph = resolveBundleDeps(entry);
 
 // 根据依赖图生成代码
-const buildBundle = (data) => {
+const buildBundle = (data, {
+    path,
+    filename
+}) => {
     // 读入模板字符串
     const template = fs.readFileSync('./bundle.ejs', {
         encoding: 'utf-8'
@@ -97,10 +117,9 @@ const buildBundle = (data) => {
         data
     });
     // 输出文件
-    fs.writeFileSync(data.output, code)
+    fs.writeFileSync(`${path}/${filename}`, code)
 }
 buildBundle({
-    buildInput: path.relative(process.cwd(), webpackConfig.input),
-    ...webpackConfig,
+    buildInput: path.relative(process.cwd(), entry),
     deps: moduleGraph
-});
+}, output);

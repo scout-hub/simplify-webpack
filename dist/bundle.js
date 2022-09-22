@@ -1,107 +1,126 @@
 (() => {
     "use strict";
     var __webpack_modules__ = ({
+        
+            "src/main.js": function (module, exports, require) {
+                "use strict";
 
-        "src/main.js": function (module, exports, require) {
-            "use strict";
+var _test = _interopRequireDefault(require("src/test/test.js"));
 
-            var _test = _interopRequireDefault(require("src/test/test.js"));
+var _foo = _interopRequireDefault(require("src/foo.js"));
 
-            var _foo = _interopRequireDefault(require("src/foo.js"));
+require("src/cache.js");
 
-            require("src/cache.js");
+var _test2 = _interopRequireDefault(require("src/test.json"));
 
-            function _interopRequireDefault(obj) {
-                return obj && obj.__esModule ? obj : {
-                    "default": obj
-                };
-            }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-            (0, _foo["default"])();
-            (0, _test["default"])();
-        },
+/*
+ * @Author: Zhouqi
+ * @Date: 2022-09-22 17:32:10
+ * @LastEditors: Zhouqi
+ * @LastEditTime: 2022-09-22 21:56:38
+ */
+console.log(_test2["default"]);
+(0, _foo["default"])();
+(0, _test["default"])();
+            },
+        
+            "src/test/test.js": function (module, exports, require) {
+                "use strict";
 
-        "src/test/test.js": function (module, exports, require) {
-            "use strict";
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
 
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-            exports["default"] = void 0;
+var _foo = require("src/test/foo.js");
 
-            var _foo = require("src/test/foo.js");
+var _default = _foo.testFoo;
+exports["default"] = _default;
+            },
+        
+            "src/foo.js": function (module, exports, require) {
+                "use strict";
 
-            var _default = _foo.testFoo;
-            exports["default"] = _default;
-        },
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = exports.a = void 0;
 
-        "src/foo.js": function (module, exports, require) {
-            "use strict";
+var foo = function foo() {
+  console.log('foo');
+};
 
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-            exports["default"] = exports.a = void 0;
+console.log('load foo');
+var _default = foo;
+exports["default"] = _default;
+var a = 1;
+exports.a = a;
+            },
+        
+            "src/cache.js": function (module, exports, require) {
+                "use strict";
 
-            var foo = function foo() {
-                console.log('foo');
-            };
+var _foo = require("src/foo.js");
 
-            console.log('load foo');
-            var _default = foo;
-            exports["default"] = _default;
-            var a = 1;
-            exports.a = a;
-        },
+/*
+ * @Author: Zhouqi
+ * @Date: 2022-09-22 17:19:17
+ * @LastEditors: Zhouqi
+ * @LastEditTime: 2022-09-22 17:20:34
+ */
+console.log('test module cache', _foo.a);
+            },
+        
+            "src/test.json": function (module, exports, require) {
+                "use strict";
 
-        "src/cache.js": function (module, exports, require) {
-            "use strict";
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+var _default = {
+  "a": 1,
+  "b": 2
+};
+exports["default"] = _default;
+            },
+        
+            "src/test/foo.js": function (module, exports, require) {
+                "use strict";
 
-            var _foo = require("src/foo.js");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.testFoo = void 0;
 
-            /*
-             * @Author: Zhouqi
-             * @Date: 2022-09-22 17:19:17
-             * @LastEditors: Zhouqi
-             * @LastEditTime: 2022-09-22 17:20:34
-             */
-            console.log('test module cache', _foo.a);
-        },
+var testFoo = function testFoo() {
+  console.log('test foo');
+};
 
-        "src/test/foo.js": function (module, exports, require) {
-            "use strict";
+exports.testFoo = testFoo;
+            },
+        
+            "src/foo.js": function (module, exports, require) {
+                "use strict";
 
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-            exports.testFoo = void 0;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = exports.a = void 0;
 
-            var testFoo = function testFoo() {
-                console.log('test foo');
-            };
+var foo = function foo() {
+  console.log('foo');
+};
 
-            exports.testFoo = testFoo;
-        },
-
-        "src/foo.js": function (module, exports, require) {
-            "use strict";
-
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-            exports["default"] = exports.a = void 0;
-
-            var foo = function foo() {
-                console.log('foo');
-            };
-
-            console.log('load foo');
-            var _default = foo;
-            exports["default"] = _default;
-            var a = 1;
-            exports.a = a;
-        },
-
+console.log('load foo');
+var _default = foo;
+exports["default"] = _default;
+var a = 1;
+exports.a = a;
+            },
+        
     });
 
     var __webpack_module_cache__ = {};
