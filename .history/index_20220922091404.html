@@ -1,0 +1,45 @@
+<!--
+ * @Author: Zhouqi
+ * @Date: 2022-09-21 16:38:59
+ * @LastEditors: Zhouqi
+ * @LastEditTime: 2022-09-22 09:13:13
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="./dist/main.js"></script>
+    <script>
+        const a = {
+            arr: [{
+                x: 1
+            }, {
+                x: 2
+            }]
+        }
+
+        const b = {
+            arr: [{
+                x: 3
+            }, {
+                x: 4
+            }]
+        }
+
+        a.arr.forEach(item => {
+            item = Object.assign(item, b.arr[])
+            console.log(item);
+        });
+
+        console.log(a);
+    </script>
+</body>
+
+</html>
