@@ -2,7 +2,7 @@
  * @Author: Zhouqi
  * @Date: 2022-09-21 16:26:22
  * @LastEditors: Zhouqi
- * @LastEditTime: 2022-09-22 22:02:24
+ * @LastEditTime: 2022-09-23 14:07:38
  */
 import fs from 'fs';
 import path from 'path';
@@ -14,14 +14,29 @@ import {
     transformFromAst
 } from '@babel/core';
 import ejs from 'ejs';
-
+import {
+    SyncHook
+} from 'tapable';
 import webpackConfig from './webpack.config.js';
 
 const {
     entry,
     output,
-    module
+    module,
+    plugins
 } = webpackConfig;
+
+const compiler = {
+    hooks: {
+        build: new SyncHook(['arg']),
+    }
+}
+
+const initPlugins = (plugins) => {
+    plugins.forEach(plugin => plugin.apply(compiler));
+}
+
+initPlugins(plugins);
 
 const resolveInputDep = (filePath) => {
     let source = fs.readFileSync(filePath, {
@@ -116,6 +131,13 @@ const buildBundle = (data, {
     const code = ejs.render(template, {
         data
     });
+
+    const compilation = {
+        changeFilename(__filename) {
+            filename = __filename;
+        }
+    }
+    compiler.hooks.build.call(compilation);
     // 输出文件
     fs.writeFileSync(`${path}/${filename}`, code)
 }
