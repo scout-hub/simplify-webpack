@@ -2,7 +2,7 @@
  * @Author: Zhouqi
  * @Date: 2022-09-21 16:26:22
  * @LastEditors: Zhouqi
- * @LastEditTime: 2022-09-23 14:07:38
+ * @LastEditTime: 2022-09-26 11:16:41
  */
 import fs from 'fs';
 import path from 'path';
@@ -18,6 +18,10 @@ import {
     SyncHook
 } from 'tapable';
 import webpackConfig from './webpack.config.js';
+
+const resolve = (path1, path2 = '') => path.resolve(path1, path2);
+const relative = (path1, path2) => path.relative(path1, path2);
+const cwd = process.cwd();
 
 const {
     entry,
@@ -77,7 +81,7 @@ const resolveInputDep = (filePath) => {
             const parentPath = filePath.split('/');
             parentPath.pop();
             // 处理文件的路径
-            const p = path.relative(process.cwd(), path.resolve(parentPath.join('/'), node.source.value))
+            const p = relative(cwd, resolve(parentPath.join('/'), node.source.value))
             node.source.value = p;
         },
     });
@@ -90,15 +94,15 @@ const resolveInputDep = (filePath) => {
     });
     // 返回解析结果
     return {
-        path: path.relative(process.cwd(), filePath),
+        path: relative(cwd, filePath),
         deps,
         source: code
     }
 }
 
 const resolveBundleDeps = (filePath) => {
-    // 解析入口稳健
-    const bundleDep = resolveInputDep(path.resolve(filePath));
+    // 解析入口文件
+    const bundleDep = resolveInputDep(resolve(filePath));
     // 将入口文件解析后的依赖文件放入队列中，循环处理依赖
     const queue = [bundleDep];
     for (const {
@@ -109,7 +113,7 @@ const resolveBundleDeps = (filePath) => {
             const pPath = depPath.split('/');
             pPath.pop();
             // 将新的依赖继续添加到队列中
-            queue.push(resolveInputDep(path.resolve(pPath.join('/'), dep)));
+            queue.push(resolveInputDep(resolve(pPath.join('/'), dep)));
         });
     }
     return queue;
@@ -142,6 +146,6 @@ const buildBundle = (data, {
     fs.writeFileSync(`${path}/${filename}`, code)
 }
 buildBundle({
-    buildInput: path.relative(process.cwd(), entry),
+    buildInput: relative(cwd, entry),
     deps: moduleGraph
 }, output);
